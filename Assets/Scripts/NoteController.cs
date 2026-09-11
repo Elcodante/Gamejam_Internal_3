@@ -24,6 +24,7 @@ public class NoteController : MonoBehaviour
         // Tetap hancurkan jika terlewat
         if (currentVisualTime > noteHitTime + 1f)
         {
+            UIManager.instance.RegisterHit("Miss");
             Destroy(gameObject);
         }
     }

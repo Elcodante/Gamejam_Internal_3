@@ -33,17 +33,17 @@ public class LaneManager : MonoBehaviour
         // 4. Sistem Penilaian
         if (hitDifference <= perfectWindow)
         {
-            Debug.Log("<color=cyan>PERFECT!</color>");
+            UIManager.instance.RegisterHit("Perfect");
             HitNote(targetNote);
         }
         else if (hitDifference <= goodWindow)
         {
-            Debug.Log("<color=green>GOOD!</color>");
+            UIManager.instance.RegisterHit("Good");
             HitNote(targetNote);
         }
         else if (hitDifference <= badWindow)
         {
-            Debug.Log("<color=orange>BAD!</color>");
+            UIManager.instance.RegisterHit("Miss");
             HitNote(targetNote);
         }
         else
