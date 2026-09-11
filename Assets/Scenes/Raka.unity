@@ -221,6 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 133658604}
   - component: {fileID: 133658605}
+  - component: {fileID: 133658606}
   m_Layer: 0
   m_Name: HitZone_2
   m_TagString: Untagged
@@ -302,6 +303,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &133658606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133658603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1efb6a8357ab64ab2d0bdc742b857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
+  pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  fadeSpeed: 5
 --- !u!1 &176246650
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +373,7 @@ GameObject:
   m_Component:
   - component: {fileID: 309238319}
   - component: {fileID: 309238320}
+  - component: {fileID: 309238321}
   m_Layer: 0
   m_Name: HitZone_6
   m_TagString: Untagged
@@ -439,6 +455,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &309238321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309238318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1efb6a8357ab64ab2d0bdc742b857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
+  pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  fadeSpeed: 5
 --- !u!1 &391776468
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +479,7 @@ GameObject:
   m_Component:
   - component: {fileID: 391776469}
   - component: {fileID: 391776470}
+  - component: {fileID: 391776471}
   m_Layer: 0
   m_Name: HitZone_5
   m_TagString: Untagged
@@ -530,6 +561,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &391776471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391776468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1efb6a8357ab64ab2d0bdc742b857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
+  pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  fadeSpeed: 5
 --- !u!1 &515741598
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,6 +842,135 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &750743473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 750743475}
+  - component: {fileID: 750743474}
+  m_Layer: 0
+  m_Name: Audio Source_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &750743474
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750743473}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 6965251913981430946, guid: 3d96458d22310aa4491e233a0d2bcf33, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: c110b14ac706b154ba79f083537c48cf, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &750743475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750743473}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1193252942}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &947143896
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,6 +1018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1076679530}
   - component: {fileID: 1076679531}
+  - component: {fileID: 1076679532}
   m_Layer: 0
   m_Name: HitZone_1
   m_TagString: Untagged
@@ -925,6 +1100,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1076679532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076679529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1efb6a8357ab64ab2d0bdc742b857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
+  pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  fadeSpeed: 5
 --- !u!1 &1193252940
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,9 +1124,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1193252942}
   - component: {fileID: 1193252941}
-  - component: {fileID: 1193252944}
   - component: {fileID: 1193252943}
-  - component: {fileID: 1193252945}
+  - component: {fileID: 1193252946}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -964,6 +1152,7 @@ MonoBehaviour:
   - {fileID: 515741600}
   - {fileID: 1467341027}
   - {fileID: 176246652}
+  autoBeatmapManager: {fileID: 1193252946}
 --- !u!4 &1193252942
 Transform:
   m_ObjectHideFlags: 0
@@ -976,7 +1165,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1351638403}
+  - {fileID: 750743475}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1193252943
@@ -991,15 +1182,96 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91973a2541b8d654d8c2fbf65fb87d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongManager
-  musicSource: {fileID: 1193252944}
+  musicSource: {fileID: 1351638402}
+  songDelayInSeconds: 3
   songPosition: 0
---- !u!82 &1193252944
-AudioSource:
+  visualSongPosition: 0
+--- !u!114 &1193252946
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193252940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b3c3c542e9dd946991fa81c96ebc7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AutoBeatmapGenerator
+  ghostAudio: {fileID: 750743474}
+  spawnWarningTime: 2
+  beatThreshold: 0.05
+  cooldown: 0.2
+  notePrefab: {fileID: 2588778934578038757, guid: 8add5db743e867840883a2672985e6d1, type: 3}
+  inputManager: {fileID: 1193252941}
+  hitZones:
+  - {fileID: 1076679530}
+  - {fileID: 133658604}
+  - {fileID: 1638805019}
+  - {fileID: 1900990296}
+  - {fileID: 391776469}
+  - {fileID: 309238319}
+--- !u!1 &1321977723
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1321977724}
+  m_Layer: 0
+  m_Name: Lanes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1321977724
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321977723}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1076679530}
+  - {fileID: 133658604}
+  - {fileID: 1638805019}
+  - {fileID: 1900990296}
+  - {fileID: 391776469}
+  - {fileID: 309238319}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1351638401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1351638403}
+  - component: {fileID: 1351638402}
+  m_Layer: 0
+  m_Name: Audio Source_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1351638402
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351638401}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -1090,23 +1362,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1193252945
-MonoBehaviour:
+--- !u!4 &1351638403
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1193252940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf22de52c9f9cb64a8c278c9a40bc264, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BeatmapManager
-  currentBeatmap: {fileID: 11400000, guid: 49b50201531321a4f8a9d86a1a25cc0b, type: 2}
-  notePrefab: {fileID: 2588778934578038757, guid: 8add5db743e867840883a2672985e6d1, type: 3}
-  spawnWarningTime: 6
-  inputManager: {fileID: 1193252941}
---- !u!1 &1321977723
+  m_GameObject: {fileID: 1351638401}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1193252942}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1374371149
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1114,33 +1385,75 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1321977724}
+  - component: {fileID: 1374371152}
+  - component: {fileID: 1374371151}
+  - component: {fileID: 1374371150}
   m_Layer: 0
-  m_Name: Lanes
+  m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1321977724
+--- !u!114 &1374371150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374371149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
+--- !u!114 &1374371151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374371149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1374371152
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1321977723}
+  m_GameObject: {fileID: 1374371149}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1076679530}
-  - {fileID: 133658604}
-  - {fileID: 1638805019}
-  - {fileID: 1900990296}
-  - {fileID: 391776469}
-  - {fileID: 309238319}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1467341025
@@ -1199,6 +1512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1638805019}
   - component: {fileID: 1638805020}
+  - component: {fileID: 1638805021}
   m_Layer: 0
   m_Name: HitZone_3
   m_TagString: Untagged
@@ -1280,6 +1594,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1638805021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638805018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1efb6a8357ab64ab2d0bdc742b857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
+  pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  fadeSpeed: 5
 --- !u!1 &1900990295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,6 +1618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1900990296}
   - component: {fileID: 1900990297}
+  - component: {fileID: 1900990298}
   m_Layer: 0
   m_Name: HitZone_4
   m_TagString: Untagged
@@ -1371,6 +1700,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1900990298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900990295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1efb6a8357ab64ab2d0bdc742b857a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
+  pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  fadeSpeed: 5
 --- !u!1 &2110014942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,3 +1769,4 @@ SceneRoots:
   - {fileID: 1193252942}
   - {fileID: 1321977724}
   - {fileID: 947143897}
+  - {fileID: 1374371152}

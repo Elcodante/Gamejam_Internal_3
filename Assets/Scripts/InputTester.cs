@@ -5,14 +5,15 @@ public class InputTester : MonoBehaviour
 {
     private RhythmControls controls;
 
-    // Array untuk menyimpan 6 LaneManager kita
     public LaneManager[] lanes = new LaneManager[6];
+
+    // BARU: Tambahkan referensi ke pengelola Beatmap untuk mengambil visual HitZones
+    public AutoBeatmapGenerator autoBeatmapManager;
 
     private void Awake()
     {
         controls = new RhythmControls();
 
-        // Menyambungkan tombol ke Lane yang sesuai (Ingat Array mulai dari 0, jadi Lane 1 = index 0)
         controls.Gameplay.Lane1.performed += ctx => CheckLaneHit(0);
         controls.Gameplay.Lane2.performed += ctx => CheckLaneHit(1);
         controls.Gameplay.Lane3.performed += ctx => CheckLaneHit(2);
@@ -26,10 +27,29 @@ public class InputTester : MonoBehaviour
 
     private void CheckLaneHit(int laneIndex)
     {
-        // Ambil waktu musik saat tombol ditekan
-        float currentSongTime = SongManager.Instance.songPosition;
+        // 1. TAMBAHKAN LOG INI: Agar kita tahu input keyboard benar-benar masuk!
+        Debug.Log($"[Input Tester] Tombol untuk Jalur {laneIndex} ditekan!");
 
-        // Perintahkan Lane yang bersangkutan untuk mencoba memukul nada
-        lanes[laneIndex].AttemptHit(currentSongTime);
+        float currentSongTime = SongManager.instance.songPosition;
+
+        // 2. Cek dan eksekusi pukulan nada
+        if (lanes[laneIndex] != null)
+        {
+            lanes[laneIndex].AttemptHit(currentSongTime);
+        }
+
+        // 3. Efek visual berkedip
+        if (autoBeatmapManager != null && autoBeatmapManager.hitZones[laneIndex] != null)
+        {
+            HitZoneVisual visual = autoBeatmapManager.hitZones[laneIndex].GetComponent<HitZoneVisual>();
+            if (visual != null)
+            {
+                visual.Flash();
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Peringatan: autoBeatmapManager atau HitZone di jalur {laneIndex} belum dihubungkan!");
+        }
     }
 }
