@@ -165,6 +165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LaneManager
   laneIndex: 2
   activeNotes: []
+  perfectEffectPrefab: {fileID: 9066901397146159493, guid: f7a55911c6f0b224f88f4498fb3acb9d, type: 3}
+  goodEffectPrefab: {fileID: 9066901397146159493, guid: 256bcb8e038d5b544ae83531f8a6234c, type: 3}
 --- !u!1 &83182101
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,6 +213,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LaneManager
   laneIndex: 3
   activeNotes: []
+  perfectEffectPrefab: {fileID: 9066901397146159493, guid: f7a55911c6f0b224f88f4498fb3acb9d, type: 3}
+  goodEffectPrefab: {fileID: 9066901397146159493, guid: 256bcb8e038d5b544ae83531f8a6234c, type: 3}
 --- !u!1 &98944714
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,10 +264,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -623,6 +627,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LaneManager
   laneIndex: 6
   activeNotes: []
+  perfectEffectPrefab: {fileID: 9066901397146159493, guid: f7a55911c6f0b224f88f4498fb3acb9d, type: 3}
+  goodEffectPrefab: {fileID: 9066901397146159493, guid: 256bcb8e038d5b544ae83531f8a6234c, type: 3}
 --- !u!1 &185516909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1096,6 +1102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LaneManager
   laneIndex: 4
   activeNotes: []
+  perfectEffectPrefab: {fileID: 9066901397146159493, guid: f7a55911c6f0b224f88f4498fb3acb9d, type: 3}
+  goodEffectPrefab: {fileID: 9066901397146159493, guid: 256bcb8e038d5b544ae83531f8a6234c, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,6 +1116,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1233,6 +1242,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fba086b9b4c9f71429dce3032ab9d155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,8 +1696,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AutoBeatmapGenerator
   ghostAudio: {fileID: 750743474}
   spawnWarningTime: 2
-  beatThreshold: 0.1
-  cooldown: 0.2
+  beatThreshold: 0.02
+  cooldown: 0.6
   notePrefab: {fileID: 2588778934578038757, guid: 8add5db743e867840883a2672985e6d1, type: 3}
   inputManager: {fileID: 1193252941}
   hitZones:
@@ -2114,6 +2135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LaneManager
   laneIndex: 5
   activeNotes: []
+  perfectEffectPrefab: {fileID: 9066901397146159493, guid: f7a55911c6f0b224f88f4498fb3acb9d, type: 3}
+  goodEffectPrefab: {fileID: 9066901397146159493, guid: 256bcb8e038d5b544ae83531f8a6234c, type: 3}
 --- !u!1 &1558078372
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,6 +2532,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LaneManager
   laneIndex: 1
   activeNotes: []
+  perfectEffectPrefab: {fileID: 9066901397146159493, guid: f7a55911c6f0b224f88f4498fb3acb9d, type: 3}
+  goodEffectPrefab: {fileID: 9066901397146159493, guid: 256bcb8e038d5b544ae83531f8a6234c, type: 3}
 --- !u!1 &2127430337
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections; // Wajib ditambahkan untuk Coroutine
 
 public class UIManager : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         if (hitFeedbackText != null) hitFeedbackText.text = "";
-        if (hitScoreText != null) hitScoreText.text = "000000";
+        if (hitScoreText != null) hitScoreText.text = "0000000000";
         if (resultPanel != null) resultPanel.SetActive(false);
     }
 
@@ -42,6 +43,7 @@ public class UIManager : MonoBehaviour
             score += 200 * combo;
             hitFeedbackText.text = $"PERFECT!\nx{combo}";
             hitFeedbackText.color = Color.cyan;
+            AnimateTextPop(); // Panggil Animasi Pop
         }
         else if (type == "Good")
         {
@@ -49,6 +51,7 @@ public class UIManager : MonoBehaviour
             score += 50;
             hitFeedbackText.text = "GOOD!";
             hitFeedbackText.color = Color.green;
+            AnimateTextPop(); // Panggil Animasi Pop
         }
         else if (type == "Miss")
         {
@@ -56,6 +59,13 @@ public class UIManager : MonoBehaviour
             missCount++;
             hitFeedbackText.text = "MISS!";
             hitFeedbackText.color = Color.red;
+            AnimateTextPop(); // Panggil Animasi Pop
+
+            // PICU EFEK CAMERA SHAKE! (Durasi 0.15 detik, Kekuatan 0.2)
+            if (CameraShake.instance != null)
+            {
+                CameraShake.instance.Shake(0.15f, 0.2f);
+            }
 
             if (missCount >= maxMissAllowed)
             {
@@ -63,8 +73,38 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        hitScoreText.text = score.ToString("D6");
+        hitScoreText.text = score.ToString("D10");
     }
+
+    // --- BARU: LOGIKA ANIMASI POP TEXT ---
+    private void AnimateTextPop()
+    {
+        // Pastikan teksnya tidak null sebelum mencoba dianimasikan
+        if (hitFeedbackText == null) return;
+
+        StopAllCoroutines();
+        StartCoroutine(PopRoutine());
+    }
+
+    private IEnumerator PopRoutine()
+    {
+        // 1. Teks langsung membesar 1.5x lipat seketika
+        hitFeedbackText.transform.localScale = Vector3.one * 1.5f;
+
+        Vector3 targetScale = Vector3.one;
+
+        // 2. Teks menyusut perlahan ke ukuran normal (1x)
+        while (hitFeedbackText.transform.localScale.x > 1.01f)
+        {
+            // Lerp digunakan agar pergerakannya mulus (smooth)
+            hitFeedbackText.transform.localScale = Vector3.Lerp(hitFeedbackText.transform.localScale, targetScale, Time.unscaledDeltaTime * 15f);
+            yield return null; // Tunggu frame selanjutnya
+        }
+
+        // 3. Pastikan angkanya benar-benar bulat kembali ke 1 di akhir
+        hitFeedbackText.transform.localScale = targetScale;
+    }
+    // ------------------------------------
 
     private void TriggerGameOver()
     {
