@@ -3,51 +3,65 @@ using UnityEngine;
 
 public class LaneManager : MonoBehaviour
 {
-    public int laneIndex; // Jalur ke berapa (1-6)
+    public int laneIndex;
 
-    // List (daftar) untuk menyimpan semua nada yang sedang berjalan di jalur ini
     public List<NoteController> activeNotes = new List<NoteController>();
 
-    // Jendela waktu (dalam detik) untuk penilaian
-    private float perfectWindow = 0.05f;
-    private float goodWindow = 0.15f;
+    // KITA PERBESAR JENDELA WAKTU AGAR LEBIH NYAMAN DIMAINKAN
+    private float perfectWindow = 0.1f;  // Selisih 0.1 detik
+    private float goodWindow = 0.25f;    // Selisih 0.25 detik
+    private float badWindow = 0.4f;      // Selisih 0.4 detik (Meleset tapi tetap kena)
 
-    // Fungsi ini dipanggil dari InputTester saat tombol jalur ini ditekan
     public void AttemptHit(float currentSongTime)
     {
-        // Jika tidak ada nada di jalur ini, hentikan (pemain menekan tanpa ada nada)
+        // 1. SOLUSI "HANTU": Bersihkan daftar dari nada yang sudah hancur karena terlewat!
+        // (Ini sangat penting agar list tidak dipenuhi objek kosong/null)
+        activeNotes.RemoveAll(note => note == null);
+
+        // Jika tidak ada nada aktif di jalur ini, batalkan
         if (activeNotes.Count == 0) return;
 
-        // Ambil nada paling pertama (paling bawah) di dalam daftar
+        // 2. Selalu cek nada urutan pertama (yang posisinya paling bawah)
         NoteController targetNote = activeNotes[0];
 
-        // Hitung selisih waktu antara kapan ditekan vs kapan seharusnya ditekan
+        // 3. Hitung selisih waktu
         float hitDifference = Mathf.Abs(targetNote.noteHitTime - currentSongTime);
 
-        // Cek Penilaian berdasarkan selisih waktu
+        // LOG DIAGNOSTIK: Akan memberi tahu Anda persisnya berapa detik Anda meleset
+        Debug.Log($"[Jalur {laneIndex}] Tombol ditekan. Selisih Waktu: {hitDifference:F3} detik");
+
+        // 4. Sistem Penilaian
         if (hitDifference <= perfectWindow)
         {
-            Debug.Log($"PERFECT! (Selisih: {hitDifference:F3} detik)");
+            Debug.Log("<color=cyan>PERFECT!</color>");
             HitNote(targetNote);
         }
         else if (hitDifference <= goodWindow)
         {
-            Debug.Log($"GOOD! (Selisih: {hitDifference:F3} detik)");
+            Debug.Log("<color=green>GOOD!</color>");
+            HitNote(targetNote);
+        }
+        else if (hitDifference <= badWindow)
+        {
+            Debug.Log("<color=orange>BAD!</color>");
             HitNote(targetNote);
         }
         else
         {
-            // Jika selisih masih sangat besar, berarti menekan terlalu cepat.
-            Debug.Log($"Terlalu Cepat!");
+            // Jika Anda menekan dengan selisih > 0.4 detik, 
+            // anggap pencet sembarangan (spam). Nada dibiarkan lewat.
+            Debug.Log("<color=red>DIABAIKAN (Terlalu jauh!)</color>");
         }
     }
 
     private void HitNote(NoteController note)
     {
-        note.isHit = true; // Tandai sudah ditekan
-        activeNotes.Remove(note); // Keluarkan dari daftar jalur
+        note.isHit = true;
 
-        // Hancurkan objek nada secara visual
+        // Hapus dari daftar jalur ini
+        activeNotes.Remove(note);
+
+        // Hancurkan objek visualnya
         Destroy(note.gameObject);
     }
 }

@@ -10,17 +10,20 @@ public class NoteController : MonoBehaviour
 
     public bool isHit = false;
 
-    private void Update()
+    void Update()
     {
         if (isHit) return;
 
-        float currentSongTime = SongManager.Instance.songPosition;
-        float yPos = hitZoneY + ((noteHitTime - currentSongTime) * scrollSpeed);
+        // PENTING: Gunakan waktu visual yang baru kita buat
+        float currentVisualTime = SongManager.instance.visualSongPosition;
+
+        // Hitung posisi Y menggunakan waktu visual
+        float yPos = hitZoneY + ((noteHitTime - currentVisualTime) * scrollSpeed);
         transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
 
-        if ( currentSongTime >= noteHitTime + 1f)
+        // Tetap hancurkan jika terlewat
+        if (currentVisualTime > noteHitTime + 1f)
         {
-            Debug.Log("Nada Terlewat (Miss)");
             Destroy(gameObject);
         }
     }
