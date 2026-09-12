@@ -6,11 +6,14 @@ public class SongManager : MonoBehaviour
     public AudioSource musicSource;
     public float songDelayInSeconds = 5f;
 
+    // --- BARU: WADAH UNTUK MENYIMPAN 3 LAGU ANDA ---
+    [Header("Song Playlist")]
+    public AudioClip[] songPlaylist;
+
     private double dspSongTime;
     public float songPosition;
     public float visualSongPosition;
 
-    // BARU: Penanda agar fungsi menang tidak dipanggil berkali-kali
     private bool isSongFinished = false;
 
     void Awake()
@@ -23,15 +26,30 @@ public class SongManager : MonoBehaviour
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
 
+        // --- BARU: LOGIKA PEMILIHAN LAGU ACAK ---
+        if (songPlaylist.Length > 0)
+        {
+            // Pilih angka acak dari 0 sampai batas jumlah lagu yang ada
+            int randomSongIndex = Random.Range(0, songPlaylist.Length);
+
+            // Masukkan lagu yang terpilih ke dalam AudioSource utama
+            musicSource.clip = songPlaylist[randomSongIndex];
+            Debug.Log($"Lagu yang terpilih: {musicSource.clip.name}");
+        }
+
         dspSongTime = AudioSettings.dspTime + songDelayInSeconds;
-        musicSource.PlayScheduled(dspSongTime);
+
+        // Pastikan ada lagu sebelum diputar agar tidak error
+        if (musicSource.clip != null)
+        {
+            musicSource.PlayScheduled(dspSongTime);
+        }
 
         visualSongPosition = -songDelayInSeconds;
     }
 
     void Update()
     {
-        // Hentikan penghitungan jika lagu sudah selesai
         if (isSongFinished) return;
 
         songPosition = (float)(AudioSettings.dspTime - dspSongTime);
@@ -43,8 +61,6 @@ public class SongManager : MonoBehaviour
             visualSongPosition += drift * Time.unscaledDeltaTime * 5f;
         }
 
-        // --- BARU: DETEKSI LAGU SELESAI (KONDISI MENANG) ---
-        // musicSource.clip.length berisi total durasi asli lagu tersebut (dalam detik)
         if (musicSource.clip != null && songPosition >= musicSource.clip.length)
         {
             TriggerWin();
@@ -54,16 +70,13 @@ public class SongManager : MonoBehaviour
     private void TriggerWin()
     {
         isSongFinished = true;
-
         Debug.Log("<color=green>Lagu Selesai! Pemain Menang!</color>");
 
-        // Panggil UI Manager untuk memunculkan panel result
         if (UIManager.instance != null)
         {
             UIManager.instance.ShowResult(true);
         }
 
-        // Hentikan pergerakan semua sisa partikel atau nada di latar belakang
         Time.timeScale = 0f;
     }
 }
