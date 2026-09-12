@@ -6,6 +6,10 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    [Header("UI Containers (Auto-Hide on Countdown)")]
+    public GameObject gameplayHUDContainer;
+    public GameObject hitZonesContainer;
+
     [Header("In-Game HUD")]
     public TextMeshProUGUI hitFeedbackText;
     public TextMeshProUGUI hitScoreText;
@@ -15,16 +19,22 @@ public class UIManager : MonoBehaviour
     public PathSystem.Runtime.PathController carController;
 
     [Header("Beatmap Generator Reference")]
-    public AutoBeatmapGenerator autoBeatmapGenerator; // Masukkan objek AutoBeatmapGenerator di Inspector!
+    public AutoBeatmapGenerator autoBeatmapGenerator;
 
-    [Header("Result Panel")]
+    [Header("Result Panel & Buttons")]
     public GameObject resultPanel;
     public TextMeshProUGUI resultTitleText;
     public TextMeshProUGUI resultScoreText;
     public TextMeshProUGUI resultMissText;
+    public GameObject btnRestart;     // Tarik Btn_Restart ke sini di Inspector
+    public GameObject btnToMainMenu;  // Tarik Btn_ToMainMenu ke sini di Inspector
 
     [Header("Pause Panel")]
     public GameObject pausePanel;
+
+    [Header("Animation Settings")]
+    public float panelAnimDuration = 0.2f;
+    private Coroutine pauseAnimCoroutine;
 
     private int score = 0;
     private int combo = 0;
@@ -42,6 +52,8 @@ public class UIManager : MonoBehaviour
         if (hitScoreText != null) hitScoreText.text = "0000000000";
         if (resultPanel != null) resultPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
+
+        SetGameplayUIVisibility(false);
 
         if (carController != null)
         {
@@ -88,6 +100,8 @@ public class UIManager : MonoBehaviour
             countdownText.transform.localScale = Vector3.one * 1.5f;
         }
 
+        SetGameplayUIVisibility(true);
+
         if (carController != null)
         {
             carController.Play();
@@ -95,6 +109,12 @@ public class UIManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         if (countdownText != null) countdownText.gameObject.SetActive(false);
+    }
+
+    private void SetGameplayUIVisibility(bool isVisible)
+    {
+        if (gameplayHUDContainer != null) gameplayHUDContainer.SetActive(isVisible);
+        if (hitZonesContainer != null) hitZonesContainer.SetActive(isVisible);
     }
 
     public void RegisterHit(string type)
@@ -141,36 +161,50 @@ public class UIManager : MonoBehaviour
 
     public void PauseGame()
     {
-        if (pausePanel != null) pausePanel.SetActive(true);
         Time.timeScale = 0f;
 
-        // Panggil sistem pause yang memperhitungkan DSP Time
-        if (SongManager.instance != null)
+        if (pausePanel != null)
         {
-            SongManager.instance.PauseSong();
+            if (pauseAnimCoroutine != null) StopCoroutine(pauseAnimCoroutine);
+            pauseAnimCoroutine = StartCoroutine(AnimateScale(pausePanel, Vector3.zero, Vector3.one, true));
         }
 
-        if (autoBeatmapGenerator != null)
-        {
-            autoBeatmapGenerator.PauseGenerator();
-        }
+        if (SongManager.instance != null) SongManager.instance.PauseSong();
+        if (autoBeatmapGenerator != null) autoBeatmapGenerator.PauseGenerator();
     }
 
     public void ResumeGame()
     {
-        if (pausePanel != null) pausePanel.SetActive(false);
         Time.timeScale = 1f;
 
-        // Panggil sistem resume yang memulihkan DSP Time
-        if (SongManager.instance != null)
+        if (pausePanel != null)
         {
-            SongManager.instance.ResumeSong();
+            if (pauseAnimCoroutine != null) StopCoroutine(pauseAnimCoroutine);
+            pauseAnimCoroutine = StartCoroutine(AnimateScale(pausePanel, Vector3.one, Vector3.zero, false));
         }
 
-        if (autoBeatmapGenerator != null)
+        if (SongManager.instance != null) SongManager.instance.ResumeSong();
+        if (autoBeatmapGenerator != null) autoBeatmapGenerator.ResumeGenerator();
+    }
+
+    private IEnumerator AnimateScale(GameObject panel, Vector3 startScale, Vector3 targetScale, bool openPanel)
+    {
+        if (openPanel) panel.SetActive(true);
+        panel.transform.localScale = startScale;
+
+        float elapsed = 0f;
+        while (elapsed < panelAnimDuration)
         {
-            autoBeatmapGenerator.ResumeGenerator();
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / panelAnimDuration);
+            float smoothT = t * t * (3f - 2f * t);
+
+            panel.transform.localScale = Vector3.Lerp(startScale, targetScale, smoothT);
+            yield return null;
         }
+
+        panel.transform.localScale = targetScale;
+        if (!openPanel) panel.SetActive(false);
     }
 
     public void QuitToMainMenu()
@@ -182,7 +216,6 @@ public class UIManager : MonoBehaviour
     private void AnimateTextPop()
     {
         if (hitFeedbackText == null) return;
-        StopAllCoroutines();
         StartCoroutine(PopRoutine());
     }
 
@@ -214,7 +247,19 @@ public class UIManager : MonoBehaviour
         resultScoreText.text = "Score: " + score.ToString("D10");
         resultMissText.text = "Miss: " + missCount + " / " + maxMissAllowed;
 
-        // Matikan audio sepenuhnya saat game berakhir
+        if (isWin)
+        {
+            // Jika MENANG: Tombol Restart disembunyikan, To Main Menu dinyalakan
+            if (btnRestart != null) btnRestart.SetActive(false);
+            if (btnToMainMenu != null) btnToMainMenu.SetActive(true);
+        }
+        else
+        {
+            // Jika KALAH/GAME OVER: Kedua tombol dinyalakan
+            if (btnRestart != null) btnRestart.SetActive(true);
+            if (btnToMainMenu != null) btnToMainMenu.SetActive(true);
+        }
+
         if (SongManager.instance != null && SongManager.instance.musicSource != null)
         {
             SongManager.instance.musicSource.Stop();

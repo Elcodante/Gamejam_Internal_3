@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections; // Wajib ditambahkan untuk menjalankan animasi (Coroutine)
+using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -9,12 +9,16 @@ public class MainMenuController : MonoBehaviour
     public GameObject tutorialPanel;
 
     [Header("Animation Settings")]
-    [Tooltip("Waktu yang dibutuhkan untuk panel membesar/mengecil (detik)")]
+    [Tooltip("Durasi animasi pop-up (dalam detik)")]
     public float animDuration = 0.25f;
+
+    // Wadah untuk mencegah animasi bertumpuk jika tombol di-spam
+    private Coroutine settingsAnimCoroutine;
     private Coroutine tutorialAnimCoroutine;
 
     private void Start()
     {
+        // Pastikan semua panel tertutup saat awal
         if (settingsPanel != null) settingsPanel.SetActive(false);
         if (tutorialPanel != null) tutorialPanel.SetActive(false);
     }
@@ -24,42 +28,46 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene("Raka");
     }
 
+    // ==========================================
+    // LOGIKA ANIMASI SETTINGS PANEL
+    // ==========================================
     public void OpenSettings()
     {
-        if (settingsPanel != null) settingsPanel.SetActive(true);
+        if (settingsPanel == null) return;
+        if (settingsAnimCoroutine != null) StopCoroutine(settingsAnimCoroutine);
+        settingsAnimCoroutine = StartCoroutine(AnimateScale(settingsPanel, Vector3.zero, Vector3.one, true));
     }
 
     public void CloseSettings()
     {
-        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (settingsPanel == null) return;
+        if (settingsAnimCoroutine != null) StopCoroutine(settingsAnimCoroutine);
+        settingsAnimCoroutine = StartCoroutine(AnimateScale(settingsPanel, Vector3.one, Vector3.zero, false));
     }
 
     // ==========================================
-    // LOGIKA TUTORIAL PANEL (DENGAN ANIMASI)
+    // LOGIKA ANIMASI TUTORIAL PANEL
     // ==========================================
     public void OpenTutorial()
     {
         if (tutorialPanel == null) return;
-
-        // Hentikan animasi sebelumnya jika tombol ditekan berulang-ulang dengan cepat
         if (tutorialAnimCoroutine != null) StopCoroutine(tutorialAnimCoroutine);
-
-        // Mulai animasi membesar (dari skala 0 ke 1)
         tutorialAnimCoroutine = StartCoroutine(AnimateScale(tutorialPanel, Vector3.zero, Vector3.one, true));
     }
 
     public void CloseTutorial()
     {
         if (tutorialPanel == null) return;
-
-        // Mulai animasi mengecil (dari skala 1 ke 0)
         if (tutorialAnimCoroutine != null) StopCoroutine(tutorialAnimCoroutine);
         tutorialAnimCoroutine = StartCoroutine(AnimateScale(tutorialPanel, Vector3.one, Vector3.zero, false));
     }
 
-    // Fungsi inti untuk menggerakkan ukuran panel secara mulus
+    // ==========================================
+    // FUNGSI INTI ANIMASI POP-UP
+    // ==========================================
     private IEnumerator AnimateScale(GameObject panel, Vector3 startScale, Vector3 targetScale, bool openPanel)
     {
+        // Jika membuka, aktifkan objeknya dulu sebelum dibesarkan
         if (openPanel) panel.SetActive(true);
 
         panel.transform.localScale = startScale;
@@ -70,16 +78,17 @@ public class MainMenuController : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / animDuration);
 
-            // Rumus SmoothStep: Membuat awalan dan akhiran animasi lebih halus (tidak kaku)
+            // Rumus SmoothStep agar pergerakannya mulus (tidak kaku di awal/akhir)
             float smoothT = t * t * (3f - 2f * t);
 
             panel.transform.localScale = Vector3.Lerp(startScale, targetScale, smoothT);
-            yield return null; // Tunggu ke frame berikutnya
+            yield return null;
         }
 
+        // Pastikan ukurannya pas di akhir animasi
         panel.transform.localScale = targetScale;
 
-        // Jika perintahnya untuk menutup, matikan panel setelah ukurannya 0
+        // Jika menutup, nonaktifkan objeknya setelah mengecil ke 0
         if (!openPanel) panel.SetActive(false);
     }
 
