@@ -3802,7 +3802,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1193252941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3854,11 +3854,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongManager
   musicSource: {fileID: 1351638402}
-  songDelayInSeconds: 5
+  songDelayInSeconds: 7
   songPlaylist:
-  - {fileID: 8300000, guid: b89296afa84161c4386acd772db6fe1e, type: 3}
-  - {fileID: 8300000, guid: 1f339d09c34f7b949b4abf97548be8bd, type: 3}
   - {fileID: 8300000, guid: fb0bdd8e92ab9d94ea80a3ee91046234, type: 3}
+  - {fileID: 8300000, guid: 1f339d09c34f7b949b4abf97548be8bd, type: 3}
+  - {fileID: 8300000, guid: b89296afa84161c4386acd772db6fe1e, type: 3}
   songPosition: 0
   visualSongPosition: 0
   isSongFinished: 0
@@ -3875,7 +3875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoBeatmapGenerator
   ghostAudio: {fileID: 750743474}
-  spawnWarningTime: 4
+  spawnWarningTime: 8
   audioOffset: 0
   beatThreshold: 0.02
   cooldown: 0.5
@@ -5489,7 +5489,7 @@ MonoBehaviour:
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
-    Dutch: 0
+    Dutch: -0.00000005745094
     ModeOverride: 0
     PhysicalProperties:
       GateFit: 2

@@ -50,9 +50,18 @@ public class LaneManager : MonoBehaviour
         GameObject fxToSpawn = null;
 
         if (hitType == "Perfect")
+        {
             fxToSpawn = perfectEffectPrefab;
+            if (AudioManager.instance != null)
+                AudioManager.instance.PlaySFX("Perfect");
+        }
+            
         else if (hitType == "Good")
+        {
             fxToSpawn = goodEffectPrefab;
+            if (AudioManager.instance != null)
+                AudioManager.instance.PlaySFX("Great");
+        }
 
         if (fxToSpawn != null)
         {
