@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3046718231576335071}
   - component: {fileID: 4507846180159410050}
   - component: {fileID: 8418013760248424453}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PerfectHit_FX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4840,7 +4840,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
