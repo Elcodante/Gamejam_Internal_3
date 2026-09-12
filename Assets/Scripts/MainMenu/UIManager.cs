@@ -40,13 +40,24 @@ public class UIManager : MonoBehaviour
         if (resultPanel != null) resultPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
 
-        // Mulai hitung mundur saat scene dimuat
+        // 1. KUNCI MOBIL LANGSUNG DI TITIK AWAL
+        if (carController != null)
+        {
+            carController.ResetPlayback();
+            carController.Stop();
+        }
+        else
+        {
+            Debug.LogWarning("<color=yellow>[UIManager]</color> Slot 'Car Controller' di Inspector masih KOSONG! Tarik objek mobil ke slot ini agar hitung mundur bisa menahan mobil.");
+        }
+
+        // 2. Mulai hitung mundur
         StartCoroutine(CountdownRoutine());
     }
 
     private IEnumerator CountdownRoutine()
     {
-        // 1. Tahan mobil agar tidak bergerak dulu
+        // Pastikan mobil tetap diam selama hitung mundur berjalan
         if (carController != null) carController.Stop();
 
         if (countdownText != null) countdownText.gameObject.SetActive(true);
@@ -58,8 +69,6 @@ public class UIManager : MonoBehaviour
             {
                 countdownText.text = count.ToString();
                 countdownText.color = Color.white;
-
-                // Efek pop sederhana untuk angka hitung mundur
                 countdownText.transform.localScale = Vector3.one * 1.5f;
             }
 
@@ -76,7 +85,9 @@ public class UIManager : MonoBehaviour
             count--;
         }
 
-        // 2. Waktunya GO!
+        // ==========================================
+        // TEPAT SAAT "GO!" MOBIL BARU MULAI BERJALAN!
+        // ==========================================
         if (countdownText != null)
         {
             countdownText.text = "GO!";
@@ -85,9 +96,12 @@ public class UIManager : MonoBehaviour
         }
 
         // Lepas rem mobil!
-        if (carController != null) carController.Play();
+        if (carController != null)
+        {
+            carController.Play();
+        }
 
-        // 3. Sembunyikan teks GO setelah 1 detik
+        // Sembunyikan teks GO setelah 1 detik
         yield return new WaitForSeconds(1f);
         if (countdownText != null) countdownText.gameObject.SetActive(false);
     }
@@ -120,7 +134,6 @@ public class UIManager : MonoBehaviour
             hitFeedbackText.color = Color.red;
             AnimateTextPop();
 
-            // PICU EFEK CAMERA SHAKE! (Pastikan script CameraShake sudah ada di scene)
             if (CameraShake.instance != null)
             {
                 CameraShake.instance.Shake(0.15f, 0.2f);
@@ -157,7 +170,6 @@ public class UIManager : MonoBehaviour
     {
         if (hitFeedbackText == null) return;
         StopAllCoroutines();
-        // Restart coroutine hitung mundur jika berbenturan (opsional, tapi aman)
         StartCoroutine(PopRoutine());
     }
 
