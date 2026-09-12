@@ -29,20 +29,15 @@ public class BeatmapManager : MonoBehaviour
 
     void SpawnNote(NoteData data)
     {
-        // 1. Ambil posisi target langsung dari objek HitZone visual
         Transform targetHitZone = hitZones[data.lane - 1];
 
-        // 2. Munculkan nada lurus di atas target (misal ditambah jarak 10 ke atas dari posisi Y HitZone)
-        Vector3 spawnPos = new Vector3(targetHitZone.position.x, targetHitZone.position.y + 10f, 0f);
-        GameObject newNoteObj = Instantiate(notePrefab, spawnPos, Quaternion.identity);
+        // Spawn sebagai child dari parent HitZone
+        GameObject newNoteObj = Instantiate(notePrefab, targetHitZone.position, targetHitZone.rotation, targetHitZone.parent);
 
         NoteController controller = newNoteObj.GetComponent<NoteController>();
+        controller.targetHitZone = targetHitZone;
         controller.noteHitTime = data.time;
 
-        // 3. BARU: Paksa nada mengenali persis di posisi Y berapa HitZone itu berada!
-        controller.hitZoneY = targetHitZone.position.y;
-
-        // Daftarkan ke sistem penilaian
         inputManager.lanes[data.lane - 1].activeNotes.Add(controller);
     }
 }

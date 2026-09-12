@@ -62,13 +62,14 @@ public class AutoBeatmapGenerator : MonoBehaviour
         int randomLane = Random.Range(1, 7);
         Transform targetHitZone = hitZones[randomLane - 1];
 
-        Vector3 spawnPos = new Vector3(targetHitZone.position.x, targetHitZone.position.y + 10f, 0f);
-        GameObject newNoteObj = Instantiate(notePrefab, spawnPos, Quaternion.identity);
+        // 1. Spawn note sebagai child dari parent HitZone agar ikut bergerak bersama TrackFollower
+        GameObject newNoteObj = Instantiate(notePrefab, targetHitZone.position, targetHitZone.rotation, targetHitZone.parent);
 
+        // 2. Hubungkan data target
         NoteController controller = newNoteObj.GetComponent<NoteController>();
-        controller.hitZoneY = targetHitZone.position.y;
-
+        controller.targetHitZone = targetHitZone;
         controller.noteHitTime = SongManager.instance.visualSongPosition + spawnWarningTime;
+
         inputManager.lanes[randomLane - 1].activeNotes.Add(controller);
     }
 }

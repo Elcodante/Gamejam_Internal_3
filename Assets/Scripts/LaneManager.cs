@@ -47,7 +47,6 @@ public class LaneManager : MonoBehaviour
         note.isHit = true;
         activeNotes.Remove(note);
 
-        // --- BARU: LOGIKA MEMUNCULKAN PARTIKEL ---
         GameObject fxToSpawn = null;
 
         if (hitType == "Perfect")
@@ -55,12 +54,12 @@ public class LaneManager : MonoBehaviour
         else if (hitType == "Good")
             fxToSpawn = goodEffectPrefab;
 
-        // Jika variabel partikel ada isinya, munculkan tepat di posisi nada tersebut
         if (fxToSpawn != null)
         {
-            Instantiate(fxToSpawn, note.transform.position, Quaternion.identity);
+            // Parent ke container HitZone agar partikel ikut bergerak bersama kamera
+            Transform fxParent = note.targetHitZone != null ? note.targetHitZone.parent : null;
+            Instantiate(fxToSpawn, note.transform.position, note.transform.rotation, fxParent);
         }
-        // ------------------------------------------
 
         Destroy(note.gameObject);
     }
