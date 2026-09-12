@@ -9,7 +9,6 @@ public class NoteController : MonoBehaviour
 
     public bool isHit = false;
 
-    // FUNGSI BARU INI WAJIB ADA
     public void ForcePositionUpdate()
     {
         if (targetHitZone == null) return;
@@ -23,9 +22,9 @@ public class NoteController : MonoBehaviour
 
     void Update()
     {
-        if (isHit) return;
+        // PENTING: Jangan update posisi atau hitung Miss saat game berhenti/pause!
+        if (isHit || Time.timeScale == 0f) return;
 
-        // Panggil fungsi pergerakannya di sini juga
         ForcePositionUpdate();
 
         if (SongManager.instance.visualSongPosition > noteHitTime + 0.5f)
