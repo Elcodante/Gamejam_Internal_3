@@ -7,10 +7,6 @@ public class AutoBeatmapGenerator : MonoBehaviour
 
     [Header("Settings")]
     public float spawnWarningTime = 2f;
-
-    // BARU: Kalibrasi waktu (Offset). 
-    // Jika nada selalu terasa TERLAMBAT dari lagu, isi dengan angka minus (misal -0.1).
-    // Jika nada terasa TERLALU CEPAT, isi dengan angka plus (misal 0.1).
     public float audioOffset = 0f;
 
     [Header("Detection Tuning")]
@@ -19,7 +15,6 @@ public class AutoBeatmapGenerator : MonoBehaviour
 
     [Header("References")]
     public GameObject notePrefab;
-
     public float noteScale = 1f;
 
     public InputTester inputManager;
@@ -30,51 +25,73 @@ public class AutoBeatmapGenerator : MonoBehaviour
 
     private float[] spectrumData = new float[256];
     private float lastSpawnTime = 0f;
-
-    // BARU: Menyimpan tingkat volume bass di frame sebelumnya untuk mencari hentakan
     private float previousBassEnergy = 0f;
+
+    // --- BARU: Variabel untuk Ghost Audio ---
+    private double pauseStartTime;
+    private double scheduledStartTime;
 
     void Start()
     {
-        if (SongManager.instance.musicSource.clip != null)
+        if (SongManager.instance != null && SongManager.instance.musicSource.clip != null)
         {
             ghostAudio.clip = SongManager.instance.musicSource.clip;
         }
 
-        double mainStartTime = AudioSettings.dspTime + SongManager.instance.songDelayInSeconds;
-        ghostAudio.PlayScheduled(mainStartTime - spawnWarningTime);
+        scheduledStartTime = AudioSettings.dspTime + SongManager.instance.songDelayInSeconds - spawnWarningTime;
+        ghostAudio.PlayScheduled(scheduledStartTime);
     }
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
         if (!ghostAudio.isPlaying) return;
 
         ghostAudio.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
 
-        // 1. KOREKSI FREKUENSI: Hanya ambil 3 pita pertama (0, 1, 2). 
-        // Ini murni area Sub-Bass dan Kick Drum (sekitar 0 - 250 Hz). Bebas dari vokal/melodi.
         float bassEnergy = 0f;
         for (int i = 0; i < 3; i++)
         {
             bassEnergy += spectrumData[i];
         }
-        bassEnergy /= 3f; // Rata-rata dari 3 pita
+        bassEnergy /= 3f;
 
-        // 2. DETEKSI PUNCAK HENTAKAN (ATTACK DETECTION)
-        // Kita hanya mencatat "ketukan" jika energi saat ini LEBIH BESAR dari frame sebelumnya.
         bool isSpiking = bassEnergy > previousBassEnergy;
         bool isLoudEnough = bassEnergy > beatThreshold;
         bool isCooldownReady = Time.time > lastSpawnTime + cooldown;
 
-        // Jika suara sedang menghentak naik + cukup keras + tidak sedang cooldown
         if (isSpiking && isLoudEnough && isCooldownReady)
         {
             lastSpawnTime = Time.time;
             SpawnRandomNote();
         }
 
-        // 3. Simpan energi frame ini untuk perbandingan di frame selanjutnya
         previousBassEnergy = bassEnergy;
+    }
+
+    public void PauseGenerator()
+    {
+        pauseStartTime = AudioSettings.dspTime;
+        if (ghostAudio != null) ghostAudio.Pause();
+    }
+
+    public void ResumeGenerator()
+    {
+        double pauseDuration = AudioSettings.dspTime - pauseStartTime;
+        scheduledStartTime += pauseDuration;
+
+        if (ghostAudio != null)
+        {
+            if (AudioSettings.dspTime < scheduledStartTime)
+            {
+                ghostAudio.Stop();
+                ghostAudio.PlayScheduled(scheduledStartTime);
+            }
+            else
+            {
+                ghostAudio.UnPause();
+            }
+        }
     }
 
     void SpawnRandomNote()
@@ -95,8 +112,6 @@ public class AutoBeatmapGenerator : MonoBehaviour
 
         NoteController controller = newNoteObj.GetComponent<NoteController>();
         controller.targetHitZone = targetHitZone;
-
-        // DITAMBAHKAN KALIBRASI OFFSET UNTUK PENYESUAIAN MANUAL
         controller.noteHitTime = SongManager.instance.visualSongPosition + spawnWarningTime + audioOffset;
 
         controller.ForcePositionUpdate();

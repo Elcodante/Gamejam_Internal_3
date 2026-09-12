@@ -6,7 +6,6 @@ public class SongManager : MonoBehaviour
     public AudioSource musicSource;
     public float songDelayInSeconds = 5f;
 
-    // --- BARU: WADAH UNTUK MENYIMPAN 3 LAGU ANDA ---
     [Header("Song Playlist")]
     public AudioClip[] songPlaylist;
 
@@ -14,7 +13,10 @@ public class SongManager : MonoBehaviour
     public float songPosition;
     public float visualSongPosition;
 
-    private bool isSongFinished = false;
+    public bool isSongFinished = false;
+
+    // --- BARU: Variabel untuk mencatat waktu pause ---
+    private double pauseStartTime;
 
     void Awake()
     {
@@ -26,20 +28,15 @@ public class SongManager : MonoBehaviour
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
 
-        // --- BARU: LOGIKA PEMILIHAN LAGU ACAK ---
-        if (songPlaylist.Length > 0)
+        if (songPlaylist != null && songPlaylist.Length > 0)
         {
-            // Pilih angka acak dari 0 sampai batas jumlah lagu yang ada
             int randomSongIndex = Random.Range(0, songPlaylist.Length);
-
-            // Masukkan lagu yang terpilih ke dalam AudioSource utama
             musicSource.clip = songPlaylist[randomSongIndex];
             Debug.Log($"Lagu yang terpilih: {musicSource.clip.name}");
         }
 
         dspSongTime = AudioSettings.dspTime + songDelayInSeconds;
 
-        // Pastikan ada lagu sebelum diputar agar tidak error
         if (musicSource.clip != null)
         {
             musicSource.PlayScheduled(dspSongTime);
@@ -50,15 +47,15 @@ public class SongManager : MonoBehaviour
 
     void Update()
     {
-        if (isSongFinished) return;
+        if (isSongFinished || Time.timeScale == 0f) return;
 
         songPosition = (float)(AudioSettings.dspTime - dspSongTime);
-        visualSongPosition += Time.unscaledDeltaTime;
+        visualSongPosition += Time.deltaTime;
 
         float drift = songPosition - visualSongPosition;
         if (Mathf.Abs(drift) > 0.02f)
         {
-            visualSongPosition += drift * Time.unscaledDeltaTime * 5f;
+            visualSongPosition += drift * Time.deltaTime * 5f;
         }
 
         if (musicSource.clip != null && songPosition >= musicSource.clip.length)
@@ -67,8 +64,39 @@ public class SongManager : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // FUNGSI BARU UNTUK PAUSE AUDIO DENGAN AMAN
+    // ==========================================
+    public void PauseSong()
+    {
+        pauseStartTime = AudioSettings.dspTime; // Catat kapan audio mulai di-pause
+        if (musicSource != null) musicSource.Pause();
+    }
+
+    public void ResumeSong()
+    {
+        // Hitung berapa detik game tertahan, lalu majukan jadwal lagunya
+        double pauseDuration = AudioSettings.dspTime - pauseStartTime;
+        dspSongTime += pauseDuration;
+
+        if (musicSource != null)
+        {
+            // Jika pause dilakukan saat hitung mundur 3, 2, 1 (lagu belum bunyi), jadwalkan ulang!
+            if (songPosition < 0)
+            {
+                musicSource.Stop();
+                musicSource.PlayScheduled(dspSongTime);
+            }
+            else
+            {
+                musicSource.UnPause();
+            }
+        }
+    }
+
     private void TriggerWin()
     {
+        if (isSongFinished) return;
         isSongFinished = true;
         Debug.Log("<color=green>Lagu Selesai! Pemain Menang!</color>");
 

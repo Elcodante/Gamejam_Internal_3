@@ -14,6 +14,9 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI countdownText;
     public PathSystem.Runtime.PathController carController;
 
+    [Header("Beatmap Generator Reference")]
+    public AutoBeatmapGenerator autoBeatmapGenerator; // Masukkan objek AutoBeatmapGenerator di Inspector!
+
     [Header("Result Panel")]
     public GameObject resultPanel;
     public TextMeshProUGUI resultTitleText;
@@ -40,24 +43,17 @@ public class UIManager : MonoBehaviour
         if (resultPanel != null) resultPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
 
-        // 1. KUNCI MOBIL LANGSUNG DI TITIK AWAL
         if (carController != null)
         {
             carController.ResetPlayback();
             carController.Stop();
         }
-        else
-        {
-            Debug.LogWarning("<color=yellow>[UIManager]</color> Slot 'Car Controller' di Inspector masih KOSONG! Tarik objek mobil ke slot ini agar hitung mundur bisa menahan mobil.");
-        }
 
-        // 2. Mulai hitung mundur
         StartCoroutine(CountdownRoutine());
     }
 
     private IEnumerator CountdownRoutine()
     {
-        // Pastikan mobil tetap diam selama hitung mundur berjalan
         if (carController != null) carController.Stop();
 
         if (countdownText != null) countdownText.gameObject.SetActive(true);
@@ -85,9 +81,6 @@ public class UIManager : MonoBehaviour
             count--;
         }
 
-        // ==========================================
-        // TEPAT SAAT "GO!" MOBIL BARU MULAI BERJALAN!
-        // ==========================================
         if (countdownText != null)
         {
             countdownText.text = "GO!";
@@ -95,13 +88,11 @@ public class UIManager : MonoBehaviour
             countdownText.transform.localScale = Vector3.one * 1.5f;
         }
 
-        // Lepas rem mobil!
         if (carController != null)
         {
             carController.Play();
         }
 
-        // Sembunyikan teks GO setelah 1 detik
         yield return new WaitForSeconds(1f);
         if (countdownText != null) countdownText.gameObject.SetActive(false);
     }
@@ -152,12 +143,34 @@ public class UIManager : MonoBehaviour
     {
         if (pausePanel != null) pausePanel.SetActive(true);
         Time.timeScale = 0f;
+
+        // Panggil sistem pause yang memperhitungkan DSP Time
+        if (SongManager.instance != null)
+        {
+            SongManager.instance.PauseSong();
+        }
+
+        if (autoBeatmapGenerator != null)
+        {
+            autoBeatmapGenerator.PauseGenerator();
+        }
     }
 
     public void ResumeGame()
     {
         if (pausePanel != null) pausePanel.SetActive(false);
         Time.timeScale = 1f;
+
+        // Panggil sistem resume yang memulihkan DSP Time
+        if (SongManager.instance != null)
+        {
+            SongManager.instance.ResumeSong();
+        }
+
+        if (autoBeatmapGenerator != null)
+        {
+            autoBeatmapGenerator.ResumeGenerator();
+        }
     }
 
     public void QuitToMainMenu()
@@ -189,21 +202,28 @@ public class UIManager : MonoBehaviour
     private void TriggerGameOver()
     {
         ShowResult(false);
-        Time.timeScale = 0f;
-
-        if (SongManager.instance != null && SongManager.instance.musicSource != null)
-        {
-            SongManager.instance.musicSource.Stop();
-        }
     }
 
     public void ShowResult(bool isWin)
     {
+        Time.timeScale = 0f;
+
         if (resultPanel != null) resultPanel.SetActive(true);
         resultTitleText.text = isWin ? "YOU WIN" : "GAME OVER";
         resultTitleText.color = isWin ? Color.green : Color.red;
         resultScoreText.text = "Score: " + score.ToString("D10");
         resultMissText.text = "Miss: " + missCount + " / " + maxMissAllowed;
+
+        // Matikan audio sepenuhnya saat game berakhir
+        if (SongManager.instance != null && SongManager.instance.musicSource != null)
+        {
+            SongManager.instance.musicSource.Stop();
+        }
+
+        if (autoBeatmapGenerator != null && autoBeatmapGenerator.ghostAudio != null)
+        {
+            autoBeatmapGenerator.ghostAudio.Stop();
+        }
     }
 
     public void RestartGame()
