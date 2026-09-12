@@ -1,26 +1,26 @@
 using UnityEngine;
 using System.Collections;
 
+// KUNCI UTAMA: ExecutionOrder 1000 memastikan script ini dijalankan
+// TEPAT SETELAH CinemachineBrain selesai menghitung posisi kamera!
+[DefaultExecutionOrder(1000)]
 public class CameraShake : MonoBehaviour
 {
     public static CameraShake instance;
-    private Vector3 originalPos;
+    private Vector3 currentShakeOffset = Vector3.zero;
 
     void Awake()
     {
         if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
 
-    void Start()
-    {
-        // Simpan posisi asli kamera saat game dimulai
-        originalPos = transform.localPosition;
-    }
-
-    // Fungsi ini bisa dipanggil dari script manapun
+    /// <summary>
+    /// Panggil fungsi ini dari script manapun: CameraShake.instance.Shake(0.2f, 0.5f);
+    /// </summary>
     public void Shake(float duration, float magnitude)
     {
-        StopAllCoroutines(); // Hentikan getaran sebelumnya jika pemain Miss berturut-turut
+        StopAllCoroutines();
         StartCoroutine(ShakeRoutine(duration, magnitude));
     }
 
@@ -30,18 +30,32 @@ public class CameraShake : MonoBehaviour
 
         while (elapsed < duration)
         {
-            // Menghasilkan posisi acak di sekitar posisi asli
-            float x = Random.Range(-1f, 1f) * magnitude;
-            float y = Random.Range(-1f, 1f) * magnitude;
+            // Efek Decay: Getaran perlahan mereda (fade-out) agar tidak kaku
+            float damper = 1f - (elapsed / duration);
+            float currentMag = magnitude * damper;
 
-            transform.localPosition = new Vector3(originalPos.x + x, originalPos.y + y, originalPos.z);
+            // Acak posisi relatif terhadap pandangan layar kamera
+            float x = Random.Range(-1f, 1f) * currentMag;
+            float y = Random.Range(-1f, 1f) * currentMag;
 
-            // Gunakan unscaledDeltaTime agar getaran tetap jalan walau game sedang di-pause
+            // Simpan sebagai offset (bukan posisi absolut)
+            currentShakeOffset = new Vector3(x, y, 0f);
+
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        // Kembalikan posisi kamera persis ke asalnya setelah getaran selesai
-        transform.localPosition = originalPos;
+        currentShakeOffset = Vector3.zero;
+    }
+
+    // LateUpdate berjalan setelah Cinemachine memposisikan kamera
+    void LateUpdate()
+    {
+        if (currentShakeOffset != Vector3.zero)
+        {
+            // Geser kamera searah pandangan lensa (Horizontal X dan Vertikal Y di layar)
+            Vector3 worldOffset = (transform.right * currentShakeOffset.x) + (transform.up * currentShakeOffset.y);
+            transform.position += worldOffset;
+        }
     }
 }

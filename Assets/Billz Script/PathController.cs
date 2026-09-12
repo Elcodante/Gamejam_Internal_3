@@ -31,8 +31,9 @@ namespace PathSystem.Runtime
         [Tooltip("Apakah pergerakan akan mengulang kembali ke awal?")]
         [SerializeField] private bool loop = true;
 
+        // KUNCI: Ubah default menjadi false agar tidak mendahului countdown!
         [Tooltip("Otomatis mulai bergerak saat Start().")]
-        [SerializeField] private bool playOnStart = true;
+        [SerializeField] private bool playOnStart = false;
 
         [Header("--- SPEED MODES ---")]
         [Tooltip("Kecepatan di tikungan dan jalan lurus 100% konstan.")]
@@ -101,7 +102,6 @@ namespace PathSystem.Runtime
         private float distanceTraveledInSegment = 0f;
         private float currentBrakeFactor = 1f;
 
-        // Variabel Fisika Damping (SmoothDamp)
         private float currentDriftAngle = 0f;
         private float driftAngleVelocity = 0f;
 
@@ -171,18 +171,14 @@ namespace PathSystem.Runtime
 
         private void UpdateMovement(float deltaTime)
         {
-            // Ambil arah gerak saat ini
             pathData.EvaluateByDistance(currentSegmentIndex, loop, distanceTraveledInSegment, out _, out Vector3 currentTangent);
 
-            // Sensor Lookahead menembus batas-batas waypoint
             float actualLookahead = Mathf.Max(lookaheadDistance, baseSpeed * 0.4f);
             pathData.EvaluateLookahead(currentSegmentIndex, distanceTraveledInSegment, actualLookahead, loop, out _, out Vector3 aheadTangent);
 
-            // Sudut belokan relatif bertanda (- = Kiri, + = Kanan)
             float signedAngle = Vector3.SignedAngle(currentTangent, aheadTangent, Vector3.up);
             float cornerAngle = Mathf.Abs(signedAngle);
 
-            // 1. Pengereman Otomatis (Opsi B)
             if (autoBrakeOnCorners)
             {
                 float cornerSharpness = Mathf.Clamp01(cornerAngle / sharpCornerAngle);
@@ -194,7 +190,6 @@ namespace PathSystem.Runtime
                 currentBrakeFactor = 1f;
             }
 
-            // 2. Kalkulasi Drift Halus
             if (enableDrifting)
             {
                 UpdateDriftSmoothDamp(signedAngle, deltaTime);
@@ -246,7 +241,6 @@ namespace PathSystem.Runtime
                         tangentDir = PathData.EvaluateCubicBezierTangent(p0, p1, p2, p3, progress);
                     }
 
-                    // A. Posisi Dasar + Geseran Samping Halus (Outward Slide)
                     if (enableDrifting && Mathf.Abs(currentSlideDistance) > 0.001f && tangentDir != Vector3.zero)
                     {
                         Vector3 rightVector = Vector3.Cross(Vector3.up, tangentDir).normalized;
@@ -257,7 +251,6 @@ namespace PathSystem.Runtime
                         Target.position = targetPos;
                     }
 
-                    // B. Rotasi Dasar + Yaw Drift & Roll Tilt
                     if (tangentDir != Vector3.zero)
                     {
                         Quaternion baseRotation = Quaternion.LookRotation(tangentDir, Vector3.up);
@@ -299,25 +292,20 @@ namespace PathSystem.Runtime
             }
             else if (autoDriftOnCorners && absAngle >= driftCornerThreshold)
             {
-                // Menggunakan SmoothStep agar transisi dari 0 ke belok tidak patah
                 float t = Mathf.Clamp01((absAngle - driftCornerThreshold) / (sharpCornerAngle - driftCornerThreshold));
-                float smoothT = t * t * (3f - 2f * t); // Hermite Smoothstep
+                float smoothT = t * t * (3f - 2f * t);
 
                 targetAngle = Mathf.Sign(signedAngle) * Mathf.Lerp(0f, maxDriftAngle, smoothT);
             }
 
-            // Tentukan waktu redaman inersia (masuk vs keluar tikungan)
             bool isEnteringDrift = Mathf.Abs(targetAngle) > Mathf.Abs(currentDriftAngle);
             float smoothTime = isEnteringDrift ? driftEnterSmoothTime : driftExitSmoothTime;
 
-            // 1. Redaman Pegas Rotasi Bodi (SmoothDamp)
             currentDriftAngle = Mathf.SmoothDamp(currentDriftAngle, targetAngle, ref driftAngleVelocity, smoothTime, Mathf.Infinity, deltaTime);
 
-            // 2. Redaman Geseran Fisik ke Samping (Lateral Slide)
             float targetSlide = (currentDriftAngle / maxDriftAngle) * outwardSlideDistance;
             currentSlideDistance = Mathf.SmoothDamp(currentSlideDistance, targetSlide, ref slideVelocity, smoothTime, Mathf.Infinity, deltaTime);
 
-            // Trigger status drift event
             bool nowDrifting = Mathf.Abs(currentDriftAngle) > (maxDriftAngle * 0.25f);
             if (nowDrifting != isDrifting)
             {

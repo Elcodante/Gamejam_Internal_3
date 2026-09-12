@@ -6,9 +6,11 @@ public class InputTester : MonoBehaviour
     private RhythmControls controls;
 
     public LaneManager[] lanes = new LaneManager[6];
-
-    // BARU: Tambahkan referensi ke pengelola Beatmap untuk mengambil visual HitZones
     public AutoBeatmapGenerator autoBeatmapManager;
+
+    // BARU: Sambungkan referensi visual mobil (opsional jika pakai singleton instance)
+    [Header("Car Visual Juice")]
+    public CarVisualReaction carVisual;
 
     private void Awake()
     {
@@ -27,18 +29,15 @@ public class InputTester : MonoBehaviour
 
     private void CheckLaneHit(int laneIndex)
     {
-        // 1. TAMBAHKAN LOG INI: Agar kita tahu input keyboard benar-benar masuk!
-        Debug.Log($"[Input Tester] Tombol untuk Jalur {laneIndex} ditekan!");
-
         float currentSongTime = SongManager.instance.songPosition;
 
-        // 2. Cek dan eksekusi pukulan nada
+        // 1. Cek dan eksekusi ketukan nada
         if (lanes[laneIndex] != null)
         {
             lanes[laneIndex].AttemptHit(currentSongTime);
         }
 
-        // 3. Efek visual berkedip
+        // 2. Efek HitZone berkedip
         if (autoBeatmapManager != null && autoBeatmapManager.hitZones[laneIndex] != null)
         {
             HitZoneVisual visual = autoBeatmapManager.hitZones[laneIndex].GetComponent<HitZoneVisual>();
@@ -47,9 +46,15 @@ public class InputTester : MonoBehaviour
                 visual.Flash();
             }
         }
-        else
+
+        // 3. BARU: Picu gerakan miring bodi mobil secara visual!
+        if (carVisual != null)
         {
-            Debug.LogWarning($"Peringatan: autoBeatmapManager atau HitZone di jalur {laneIndex} belum dihubungkan!");
+            carVisual.TriggerLaneReaction(laneIndex);
+        }
+        else if (CarVisualReaction.instance != null)
+        {
+            CarVisualReaction.instance.TriggerLaneReaction(laneIndex);
         }
     }
 }
