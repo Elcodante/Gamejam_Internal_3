@@ -28,6 +28,8 @@ public class SongManager : MonoBehaviour
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
 
+        musicSource.volume = PlayerPrefs.GetFloat("BGMVolume", 1f);
+
         if (songPlaylist != null && songPlaylist.Length > 0)
         {
             int randomSongIndex = Random.Range(0, songPlaylist.Length);

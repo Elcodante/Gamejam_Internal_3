@@ -28,6 +28,10 @@ public class HitZoneVisual : MonoBehaviour
 
     public void Flash()
     {
+        // --- SOLUSI BUG: Cegah eksekusi jika objek sedang disembunyikan di fase persiapan ---
+        if (!gameObject.activeInHierarchy) return;
+        // -----------------------------------------------------------------------------------
+
         StopAllCoroutines();
 
         // 1. Ubah instan ke warna terang dan ukuran tertekan (Squish!)
