@@ -19,6 +19,9 @@ public class AutoBeatmapGenerator : MonoBehaviour
     public InputTester inputManager;
     public Transform[] hitZones;
 
+    [Header("Visual Assets")]
+    public Sprite[] noteSprites;
+
     private float[] spectrumData = new float[256];
     private float lastSpawnTime = 0f;
 
@@ -62,19 +65,21 @@ public class AutoBeatmapGenerator : MonoBehaviour
         int randomLane = Random.Range(1, 7);
         Transform targetHitZone = hitZones[randomLane - 1];
 
-        // 1. SOLUSI BUG 1-FRAME: Tentukan posisi spawn sementara yang jauh di atas layar 
-        // (misal 50 unit ke arah 'atas' dari target). Ini menjauhkan nada dari pandangan di frame pertama.
         Vector3 safeSpawnPos = targetHitZone.position + (targetHitZone.up * 50f);
-
-        // 2. Spawn note di posisi aman tersebut, tetap sebagai child dari parent HitZone
         GameObject newNoteObj = Instantiate(notePrefab, safeSpawnPos, targetHitZone.rotation, targetHitZone.parent);
 
-        // 3. Hubungkan data target
+        // --- BARU: GANTI GAMBAR NADA SESUAI JALUR ---
+        SpriteRenderer noteRenderer = newNoteObj.GetComponent<SpriteRenderer>();
+        if (noteRenderer != null && noteSprites.Length >= 6)
+        {
+            // Array dimulai dari 0, jadi randomLane 1 akan mengambil gambar di urutan 0
+            noteRenderer.sprite = noteSprites[randomLane - 1];
+        }
+        // --------------------------------------------
+
         NoteController controller = newNoteObj.GetComponent<NoteController>();
         controller.targetHitZone = targetHitZone;
         controller.noteHitTime = SongManager.instance.visualSongPosition + spawnWarningTime;
-
-        // 4. PENTING: Paksa nada menghitung posisi aslinya saat ini juga agar tidak ada delay visual!
         controller.ForcePositionUpdate();
 
         inputManager.lanes[randomLane - 1].activeNotes.Add(controller);
