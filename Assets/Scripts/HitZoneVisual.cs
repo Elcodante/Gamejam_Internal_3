@@ -1,48 +1,60 @@
 using UnityEngine;
-using System.Collections; // Wajib untuk Coroutine
+using System.Collections;
 
 public class HitZoneVisual : MonoBehaviour
 {
     private SpriteRenderer sr;
 
-    // Warna asli HitZone Anda
     private Color originalColor;
+    private Vector3 originalScale; // BARU: Menyimpan ukuran asli HitZone
 
-    // Warna saat tombol ditekan (misalnya abu-abu terang atau putih)
+    [Header("Visual Settings")]
     public Color pressedColor = Color.white;
 
-    // Seberapa cepat warna kembali memudar (fade)
-    public float fadeSpeed = 5f;
+    // BARU: Ukuran saat tombol ditekan. (0.8 = mengecil 20%. Jika ingin membesar, isi 1.2)
+    public Vector3 pressedScale = new Vector3(0.8f, 0.8f, 1f);
+
+    // Dipercepat agar kembalinya tombol terasa seperti pegas (membal)
+    public float fadeSpeed = 15f;
 
     void Awake()
     {
-        // Mengambil komponen SpriteRenderer dari objek ini
         sr = GetComponent<SpriteRenderer>();
-        // Menyimpan warna awal yang Anda atur di Unity Editor
         originalColor = sr.color;
+
+        // Simpan ukuran awal yang Anda atur di Unity Editor
+        originalScale = transform.localScale;
     }
 
-    // Fungsi ini yang akan dipanggil saat pemain menekan tombol
     public void Flash()
     {
-        // Hentikan kedipan sebelumnya (kalau pemain menekan tombol dengan sangat cepat)
         StopAllCoroutines();
 
-        // Ubah langsung ke warna terang
+        // 1. Ubah instan ke warna terang dan ukuran tertekan (Squish!)
         sr.color = pressedColor;
+        transform.localScale = pressedScale;
 
-        // Mulai proses perlahan kembali ke warna asli
+        // 2. Mulai proses pegas untuk kembali ke asal
         StartCoroutine(FadeBack());
     }
 
     private IEnumerator FadeBack()
     {
-        // Terus berjalan selama warna saat ini belum persis sama dengan warna asli
-        while (sr.color != originalColor)
+        // Terus berjalan selama warna belum sama ATAU ukuran belum sama
+        // (Menggunakan jarak Vector3.Distance untuk toleransi kemulusan)
+        while (sr.color != originalColor || Vector3.Distance(transform.localScale, originalScale) > 0.01f)
         {
-            // Lerp digunakan untuk transisi halus antar dua warna dari waktu ke waktu
+            // Kembalikan warna perlahan
             sr.color = Color.Lerp(sr.color, originalColor, fadeSpeed * Time.deltaTime);
-            yield return null; // Tunggu ke frame berikutnya
+
+            // Kembalikan ukuran perlahan (memberikan efek pegas)
+            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, fadeSpeed * Time.deltaTime);
+
+            yield return null;
         }
+
+        // Pastikan kembali 100% presisi di akhir frame
+        sr.color = originalColor;
+        transform.localScale = originalScale;
     }
 }

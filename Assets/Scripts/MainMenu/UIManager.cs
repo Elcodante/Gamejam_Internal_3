@@ -125,4 +125,10 @@ public class UIManager : MonoBehaviour
         resultScoreText.text = "Score: " + score.ToString("D6");
         resultMissText.text = "Miss: " + missCount + " / " + maxMissAllowed;
     }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f; // WAJIB ADA agar game tidak beku saat di-restart
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
 }

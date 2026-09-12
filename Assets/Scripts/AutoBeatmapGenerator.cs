@@ -62,13 +62,20 @@ public class AutoBeatmapGenerator : MonoBehaviour
         int randomLane = Random.Range(1, 7);
         Transform targetHitZone = hitZones[randomLane - 1];
 
-        // 1. Spawn note sebagai child dari parent HitZone agar ikut bergerak bersama TrackFollower
-        GameObject newNoteObj = Instantiate(notePrefab, targetHitZone.position, targetHitZone.rotation, targetHitZone.parent);
+        // 1. SOLUSI BUG 1-FRAME: Tentukan posisi spawn sementara yang jauh di atas layar 
+        // (misal 50 unit ke arah 'atas' dari target). Ini menjauhkan nada dari pandangan di frame pertama.
+        Vector3 safeSpawnPos = targetHitZone.position + (targetHitZone.up * 50f);
 
-        // 2. Hubungkan data target
+        // 2. Spawn note di posisi aman tersebut, tetap sebagai child dari parent HitZone
+        GameObject newNoteObj = Instantiate(notePrefab, safeSpawnPos, targetHitZone.rotation, targetHitZone.parent);
+
+        // 3. Hubungkan data target
         NoteController controller = newNoteObj.GetComponent<NoteController>();
         controller.targetHitZone = targetHitZone;
         controller.noteHitTime = SongManager.instance.visualSongPosition + spawnWarningTime;
+
+        // 4. PENTING: Paksa nada menghitung posisi aslinya saat ini juga agar tidak ada delay visual!
+        controller.ForcePositionUpdate();
 
         inputManager.lanes[randomLane - 1].activeNotes.Add(controller);
     }

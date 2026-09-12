@@ -105,5 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteController
   noteHitTime: 0
-  scrollSpeed: 5
-  hitZoneY: -4
+  scrollSpeed: 2.5
+  targetHitZone: {fileID: 0}
+  isHit: 0
