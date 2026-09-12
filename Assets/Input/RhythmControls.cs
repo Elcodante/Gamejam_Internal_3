@@ -162,7 +162,7 @@ public partial class @RhythmControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""07c75763-48e8-405b-b471-805e48046b08"",
-                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -173,7 +173,7 @@ public partial class @RhythmControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1b5033b1-97ad-454b-9508-1263d1713c39"",
-                    ""path"": ""<Keyboard>/downArrow"",
+                    ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -184,7 +184,7 @@ public partial class @RhythmControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ded640c6-5318-46f5-bd96-0dd2bbe38c4e"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""path"": ""<Keyboard>/m"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -195,7 +195,7 @@ public partial class @RhythmControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cbdf2e97-77af-4c1a-9a47-fe0f1ed166d8"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""path"": ""<Keyboard>/comma"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -206,7 +206,7 @@ public partial class @RhythmControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""898f8bcb-9d66-4553-af37-8601599dd2b2"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/period"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

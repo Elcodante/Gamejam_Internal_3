@@ -4,15 +4,14 @@ public class SongManager : MonoBehaviour
 {
     public static SongManager instance;
     public AudioSource musicSource;
-    public float songDelayInSeconds = 3f;
+    public float songDelayInSeconds = 5f;
 
     private double dspSongTime;
-
-    // 1. Waktu untuk PENILAIAN / LOGIKA (Presisi tinggi, tapi pembaruannya kasar)
     public float songPosition;
-
-    // 2. Waktu untuk PERGERAKAN VISUAL (Sangat mulus mengikuti monitor Anda)
     public float visualSongPosition;
+
+    // BARU: Penanda agar fungsi menang tidak dipanggil berkali-kali
+    private bool isSongFinished = false;
 
     void Awake()
     {
@@ -21,31 +20,50 @@ public class SongManager : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 60; // Atau ubah ke 120/144 jika monitor Anda mendukung
+        Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
 
         dspSongTime = AudioSettings.dspTime + songDelayInSeconds;
         musicSource.PlayScheduled(dspSongTime);
 
-        // Set awal waktu visual sama dengan minus delay
         visualSongPosition = -songDelayInSeconds;
     }
 
     void Update()
     {
-        // 1. Ambil Waktu Audio Asli
-        songPosition = (float)(AudioSettings.dspTime - dspSongTime);
+        // Hentikan penghitungan jika lagu sudah selesai
+        if (isSongFinished) return;
 
-        // 2. Tambahkan Waktu Visual secara frame-by-frame (sangat halus)
+        songPosition = (float)(AudioSettings.dspTime - dspSongTime);
         visualSongPosition += Time.unscaledDeltaTime;
 
-        // 3. SISTEM ANTI-DRIFT (Koreksi)
-        // Mencegah waktu visual tertinggal dari audio jika dimainkan di lagu berdurasi panjang
         float drift = songPosition - visualSongPosition;
         if (Mathf.Abs(drift) > 0.02f)
         {
-            // Jika mulai tidak sinkron, tarik perlahan waktu visual agar menyamai audio
             visualSongPosition += drift * Time.unscaledDeltaTime * 5f;
         }
+
+        // --- BARU: DETEKSI LAGU SELESAI (KONDISI MENANG) ---
+        // musicSource.clip.length berisi total durasi asli lagu tersebut (dalam detik)
+        if (musicSource.clip != null && songPosition >= musicSource.clip.length)
+        {
+            TriggerWin();
+        }
+    }
+
+    private void TriggerWin()
+    {
+        isSongFinished = true;
+
+        Debug.Log("<color=green>Lagu Selesai! Pemain Menang!</color>");
+
+        // Panggil UI Manager untuk memunculkan panel result
+        if (UIManager.instance != null)
+        {
+            UIManager.instance.ShowResult(true);
+        }
+
+        // Hentikan pergerakan semua sisa partikel atau nada di latar belakang
+        Time.timeScale = 0f;
     }
 }

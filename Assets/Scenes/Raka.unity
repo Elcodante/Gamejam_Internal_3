@@ -730,6 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
   pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  pressedScale: {x: 0.8, y: 0.8, z: 1}
   fadeSpeed: 5
 --- !u!1 &176246650
 GameObject:
@@ -1099,6 +1100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
   pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  pressedScale: {x: 0.8, y: 0.8, z: 1}
   fadeSpeed: 5
 --- !u!1 &391776468
 GameObject:
@@ -1205,6 +1207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
   pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  pressedScale: {x: 0.8, y: 0.8, z: 1}
   fadeSpeed: 5
 --- !u!1 &515741598
 GameObject:
@@ -1759,6 +1762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
   pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  pressedScale: {x: 0.8, y: 0.8, z: 1}
   fadeSpeed: 5
 --- !u!1 &1193252940
 GameObject:
@@ -1829,7 +1833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongManager
   musicSource: {fileID: 1351638402}
-  songDelayInSeconds: 3
+  songDelayInSeconds: 5
   songPosition: 0
   visualSongPosition: 0
 --- !u!114 &1193252946
@@ -1845,9 +1849,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoBeatmapGenerator
   ghostAudio: {fileID: 750743474}
-  spawnWarningTime: 2
-  beatThreshold: 0.02
-  cooldown: 0.6
+  spawnWarningTime: 4
+  beatThreshold: 0.08
+  cooldown: 1.2
   notePrefab: {fileID: 2588778934578038757, guid: 8add5db743e867840883a2672985e6d1, type: 3}
   inputManager: {fileID: 1193252941}
   hitZones:
@@ -2529,6 +2533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
   pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  pressedScale: {x: 0.8, y: 0.8, z: 1}
   fadeSpeed: 5
 --- !u!1 &1900990295
 GameObject:
@@ -2635,6 +2640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitZoneVisual
   pressedColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  pressedScale: {x: 0.8, y: 0.8, z: 1}
   fadeSpeed: 5
 --- !u!1 &2110014942
 GameObject:
