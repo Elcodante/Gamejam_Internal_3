@@ -13,7 +13,7 @@ public class MainMenuController : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("Ucup");
+        SceneManager.LoadScene("Raka");
     }
 
     public void OpenSettings()
