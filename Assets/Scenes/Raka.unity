@@ -2595,11 +2595,11 @@ AudioSource:
   m_GameObject: {fileID: 750743473}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 6965251913981430946, guid: 3d96458d22310aa4491e233a0d2bcf33, type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2608,9 +2608,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 50
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -3747,7 +3747,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082950721}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1082950725
 Camera:
   m_ObjectHideFlags: 0
@@ -4322,7 +4322,7 @@ Transform:
   m_GameObject: {fileID: 1193252940}
   serializedVersion: 2
   m_LocalRotation: {x: 0.057504117, y: -0.15454164, z: 0.009010493, w: 0.98627025}
-  m_LocalPosition: {x: -47.182487, y: 0.9780012, z: -0.9545115}
+  m_LocalPosition: {x: -47.182487, y: 0, z: -0.9545115}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4343,7 +4343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongManager
   musicSource: {fileID: 1351638402}
-  songDelayInSeconds: 5
+  songDelayInSeconds: 6
   songPlaylist:
   - {fileID: 8300000, guid: fb0bdd8e92ab9d94ea80a3ee91046234, type: 3}
   - {fileID: 8300000, guid: 1f339d09c34f7b949b4abf97548be8bd, type: 3}
@@ -4364,7 +4364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoBeatmapGenerator
   ghostAudio: {fileID: 750743474}
-  spawnWarningTime: 6
+  spawnWarningTime: 5
   audioOffset: 0
   beatThreshold: 0.02
   cooldown: 0.5
@@ -6281,7 +6281,7 @@ MonoBehaviour:
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
-    Dutch: -0.00001008248
+    Dutch: -0.00000006795123
     ModeOverride: 0
     PhysicalProperties:
       GateFit: 2

@@ -1,4 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
 public class AutoBeatmapGenerator : MonoBehaviour
 {
@@ -27,9 +28,11 @@ public class AutoBeatmapGenerator : MonoBehaviour
     private float lastSpawnTime = 0f;
     private float previousBassEnergy = 0f;
 
-    // --- BARU: Variabel untuk Ghost Audio ---
     private double pauseStartTime;
     private double scheduledStartTime;
+
+    // --- BARU: Variabel untuk jaring pengaman Game Jam ---
+    private int notesSpawned = 0;
 
     void Start()
     {
@@ -37,15 +40,54 @@ public class AutoBeatmapGenerator : MonoBehaviour
         {
             ghostAudio.clip = SongManager.instance.musicSource.clip;
         }
+        StartCoroutine(WaitAudioLoadAndPlay());
+    }
 
-        scheduledStartTime = AudioSettings.dspTime + SongManager.instance.songDelayInSeconds - spawnWarningTime;
-        ghostAudio.PlayScheduled(scheduledStartTime);
+    private IEnumerator WaitAudioLoadAndPlay()
+    {
+        if (ghostAudio.clip != null)
+        {
+            if (ghostAudio.clip.loadState == AudioDataLoadState.Unloaded)
+                ghostAudio.clip.LoadAudioData();
+
+            while (ghostAudio.clip.loadState == AudioDataLoadState.Loading)
+                yield return null;
+
+            if (ghostAudio.clip.loadState == AudioDataLoadState.Failed)
+                yield break;
+        }
+
+        float delay = SongManager.instance.songDelayInSeconds;
+        if (spawnWarningTime >= delay) spawnWarningTime = delay - 0.5f;
+
+        scheduledStartTime = AudioSettings.dspTime + delay - spawnWarningTime;
+        float timeToWait = (float)(scheduledStartTime - AudioSettings.dspTime);
+
+        if (timeToWait > 0) yield return new WaitForSeconds(timeToWait);
+
+        ghostAudio.Play();
     }
 
     void Update()
     {
-        if (Time.timeScale == 0f) return;
         if (!ghostAudio.isPlaying) return;
+
+        // ===================================================================
+        // 🚨 SISTEM FAIL-SAFE GAME JAM 🚨
+        // Jika browser ngambek dan FFT = 0 terus, selamatkan game ini!
+        if (ghostAudio.time > 4f && notesSpawned == 0)
+        {
+            if (Time.frameCount % 120 == 0)
+                Debug.LogWarning("[DEBUG LOG] Browser memblokir FFT! Mengaktifkan Mode Auto-Spawn!");
+
+            if (Time.time > lastSpawnTime + cooldown)
+            {
+                lastSpawnTime = Time.time;
+                SpawnRandomNote();
+            }
+            return; // Batalkan proses FFT di bawah karena browser tidak mendukungnya
+        }
+        // ===================================================================
 
         ghostAudio.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
 
@@ -56,6 +98,12 @@ public class AutoBeatmapGenerator : MonoBehaviour
         }
         bassEnergy /= 3f;
 
+        // Karena volume Anda 0.1 (10%), kita kalikan 10 agar kekuatannya kembali 100%
+        bassEnergy *= 10f;
+
+        if (Time.frameCount % 60 == 0)
+            Debug.Log($"[DEBUG LOG] Analisa Bass (Volume 0.1): {bassEnergy.ToString("F4")}");
+
         bool isSpiking = bassEnergy > previousBassEnergy;
         bool isLoudEnough = bassEnergy > beatThreshold;
         bool isCooldownReady = Time.time > lastSpawnTime + cooldown;
@@ -63,6 +111,7 @@ public class AutoBeatmapGenerator : MonoBehaviour
         if (isSpiking && isLoudEnough && isCooldownReady)
         {
             lastSpawnTime = Time.time;
+            notesSpawned++; // Catat bahwa FFT berhasil agar sistem Fail-Safe tidak menyala
             SpawnRandomNote();
         }
 
@@ -101,14 +150,11 @@ public class AutoBeatmapGenerator : MonoBehaviour
 
         Vector3 safeSpawnPos = targetHitZone.position + (targetHitZone.up * 50f);
         GameObject newNoteObj = Instantiate(notePrefab, safeSpawnPos, targetHitZone.rotation, targetHitZone.parent);
-
         newNoteObj.transform.localScale = new Vector3(noteScale, noteScale, 1f);
 
         SpriteRenderer noteRenderer = newNoteObj.GetComponent<SpriteRenderer>();
         if (noteRenderer != null && noteSprites.Length >= 6)
-        {
             noteRenderer.sprite = noteSprites[randomLane - 1];
-        }
 
         NoteController controller = newNoteObj.GetComponent<NoteController>();
         controller.targetHitZone = targetHitZone;
