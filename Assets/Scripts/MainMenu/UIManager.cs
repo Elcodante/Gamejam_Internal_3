@@ -70,6 +70,11 @@ public class UIManager : MonoBehaviour
 
         if (countdownText != null) countdownText.gameObject.SetActive(true);
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("123");
+        }
+
         int count = 3;
         while (count > 0)
         {

@@ -6,18 +6,8 @@ public class SettingsMenu : MonoBehaviour
     [Header("UI References")]
     public Slider bgmSlider;
     public Slider sfxSlider;
-
-    [Header("BGM Settings")]
-    // Pastikan nama ini SAMA PERSIS dengan ID BGM di AudioManager Anda (misal: "MenuBGM")
-    public string menuBGM_ID = "MenuBGM";
-
     private void Start()
     {
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlayBGM(menuBGM_ID);
-        }
-
         // 1. Sinkronkan posisi Slider dengan nilai yang tersimpan di sistem
         if (bgmSlider != null)
         {
