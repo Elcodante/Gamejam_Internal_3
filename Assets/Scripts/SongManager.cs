@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class SongManager : MonoBehaviour
 {
@@ -14,21 +15,14 @@ public class SongManager : MonoBehaviour
     public float visualSongPosition;
 
     public bool isSongFinished = false;
-
-    // --- BARU: Variabel untuk mencatat waktu pause ---
     private double pauseStartTime;
+
+    // --- BARU: Kunci untuk menahan Update ---
+    private bool isGameStarted = false;
 
     void Awake()
     {
         if (instance == null) instance = this;
-    }
-
-    void Start()
-    {
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 1;
-
-        musicSource.volume = PlayerPrefs.GetFloat("BGMVolume", 1f);
 
         if (songPlaylist != null && songPlaylist.Length > 0)
         {
@@ -36,6 +30,28 @@ public class SongManager : MonoBehaviour
             musicSource.clip = songPlaylist[randomSongIndex];
             Debug.Log($"Lagu yang terpilih: {musicSource.clip.name}");
         }
+    }
+
+    IEnumerator Start()
+    {
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 1;
+        musicSource.volume = PlayerPrefs.GetFloat("BGMVolume", 1f);
+
+        // --- PERBAIKAN FATAL: Bangunkan audio utama dan paksa muat! ---
+        if (musicSource.clip != null)
+        {
+            if (musicSource.clip.loadState == AudioDataLoadState.Unloaded)
+            {
+                musicSource.clip.LoadAudioData();
+            }
+
+            while (musicSource.clip.loadState == AudioDataLoadState.Loading)
+            {
+                yield return null;
+            }
+        }
+        // --------------------------------------------------------------
 
         dspSongTime = AudioSettings.dspTime + songDelayInSeconds;
 
@@ -45,11 +61,13 @@ public class SongManager : MonoBehaviour
         }
 
         visualSongPosition = -songDelayInSeconds;
+        isGameStarted = true;
     }
 
     void Update()
     {
-        if (isSongFinished || Time.timeScale == 0f) return;
+        // --- BARU: Tahan Update jika game belum benar-benar dimulai ---
+        if (!isGameStarted || isSongFinished || Time.timeScale == 0f) return;
 
         songPosition = (float)(AudioSettings.dspTime - dspSongTime);
         visualSongPosition += Time.deltaTime;
@@ -60,30 +78,28 @@ public class SongManager : MonoBehaviour
             visualSongPosition += drift * Time.deltaTime * 5f;
         }
 
-        if (musicSource.clip != null && songPosition >= musicSource.clip.length)
+        if (musicSource.clip != null && musicSource.clip.loadState == AudioDataLoadState.Loaded)
         {
-            TriggerWin();
+            if (songPosition >= musicSource.clip.length)
+            {
+                TriggerWin();
+            }
         }
     }
 
-    // ==========================================
-    // FUNGSI BARU UNTUK PAUSE AUDIO DENGAN AMAN
-    // ==========================================
     public void PauseSong()
     {
-        pauseStartTime = AudioSettings.dspTime; // Catat kapan audio mulai di-pause
+        pauseStartTime = AudioSettings.dspTime;
         if (musicSource != null) musicSource.Pause();
     }
 
     public void ResumeSong()
     {
-        // Hitung berapa detik game tertahan, lalu majukan jadwal lagunya
         double pauseDuration = AudioSettings.dspTime - pauseStartTime;
         dspSongTime += pauseDuration;
 
         if (musicSource != null)
         {
-            // Jika pause dilakukan saat hitung mundur 3, 2, 1 (lagu belum bunyi), jadwalkan ulang!
             if (songPosition < 0)
             {
                 musicSource.Stop();

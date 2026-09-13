@@ -51,8 +51,18 @@ public class AudioManager : MonoBehaviour
     public void PlayBGM(string id)
     {
         Sound s = Array.Find(bgmList, sound => sound.soundID == id);
-        if (s == null) return;
-        if (bgmSource.clip == s.clip) return;
+
+        if (s == null)
+        {
+            Debug.LogWarning($"[AudioManager] BGM dengan ID '{id}' tidak ditemukan!");
+            return;
+        }
+
+        // --- PERBAIKAN BUG ---
+        // Jika lagunya sama DAN sedang berputar, baru hentikan perintah.
+        // Tapi jika lagunya sama TAPI sedang mati (habis dari scene game), abaikan return dan paksa Play!
+        if (bgmSource.clip == s.clip && bgmSource.isPlaying) return;
+        // ---------------------
 
         bgmSource.clip = s.clip;
         bgmSource.loop = true;
